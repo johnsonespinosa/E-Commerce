@@ -11,15 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "Comercio Electrónico API",
-        Description = "Una ASP.NET Core Web API para administrar la compra y la venta de los productos del comercio electrónico"
-    });
-    
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "Comercio Electrónico WEB API", Version = "v1" });
 });
 
 builder.Services.AddApplicationServices();
@@ -32,7 +24,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => 
+    {
+        options.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Comercio Electrónico API V1");
+        options.RoutePrefix = string.Empty; // Para acceder a Swagger en la raíz
+    });
 }
 
 app.UseAuthentication();

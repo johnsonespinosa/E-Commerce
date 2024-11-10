@@ -19,10 +19,10 @@ public static class DependencyInjection
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
-        services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        services.AddDbContext<ApplicationDbContext>(optionsAction: options =>
         {
-            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
             options.UseNpgsql(connectionString);
+            options.AddInterceptors(services.BuildServiceProvider().GetServices<ISaveChangesInterceptor>());
         });
         
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());

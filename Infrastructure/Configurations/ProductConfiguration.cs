@@ -13,6 +13,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(product => product.Name)
             .IsRequired()
             .HasMaxLength(100); 
+        
+        builder.HasIndex(product => product.Name);
 
         builder.Property(product => product.SellPrice)
             .IsRequired()
